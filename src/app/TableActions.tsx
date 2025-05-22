@@ -5,14 +5,14 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 const TableExportActions = ({ table }: { table: any; }) => {
-  // Obtener columnas visibles
+  // Get visible columns
   const getVisibleColumns = table.getVisibleLeafColumns();
-  // Obtener las filas filtradas
-  const getFilteredRows = table.getFilteredRowModel().rows;
+  // Get filtered and sorted rows
+  const getFilteredAndSortedRows = table.getRowModel().rows;
 
   const getDataMatrix = () => {
     const columns = getVisibleColumns;
-    const rows = getFilteredRows;
+    const rows = getFilteredAndSortedRows; // Filas ya ordenadas
 
     const headers = columns.map((col: { columnDef: { header: string; }; }) => col.columnDef.header as string);
     const data = rows.map((row: { original: unknown; }) =>
