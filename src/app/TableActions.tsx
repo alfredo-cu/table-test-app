@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-// import Papa from 'papaparse';
 import * as XLSX from 'xlsx';
-// import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
-const TableExportActions = ({ table }: any) => {
+const TableExportActions = ({ table }: { table: any; }) => {
   // Obtener columnas visibles
   const getVisibleColumns = table.getVisibleLeafColumns();
   // Obtener las filas filtradas
@@ -17,8 +15,8 @@ const TableExportActions = ({ table }: any) => {
     const rows = getFilteredRows;
 
     const headers = columns.map((col: { columnDef: { header: string; }; }) => col.columnDef.header as string);
-    const data = rows.map((row: { original: any; }) =>
-      columns.map((col: { accessorFn: (arg0: any) => any; }) => col.accessorFn?.(row.original) ?? '')
+    const data = rows.map((row: { original: unknown; }) =>
+      columns.map((col: { accessorFn: (arg0: unknown) => unknown; }) => col.accessorFn?.(row.original) ?? '')
     );
 
     return { headers, data };
@@ -49,13 +47,6 @@ const TableExportActions = ({ table }: any) => {
     win?.print();
   };
 
-  // const handleExportCSV2 = () => {
-  //   const { headers, data } = getDataMatrix();
-  //   const csv = Papa.unparse([headers, ...data]);
-  //   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  //   saveAs(blob, 'table.csv');
-  // };
-
   const handleExportCSV = () => {
     const { headers, data } = getDataMatrix();
     const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
@@ -64,18 +55,18 @@ const TableExportActions = ({ table }: any) => {
     XLSX.writeFile(workbook, 'table.csv', { bookType: 'csv' });
   };
 
-const handleExportExcel = () => {
-  const { headers, data } = getDataMatrix();
-  const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-  XLSX.writeFile(workbook, 'table.xlsx');
-};
+  const handleExportExcel = () => {
+    const { headers, data } = getDataMatrix();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, 'table.xlsx');
+  };
 
   const handleExportPDF = () => {
     const { headers, data } = getDataMatrix();
     const doc = new jsPDF();
-    doc.autoTable({
+    autoTable(doc, {
       head: [headers],
       body: data,
       styles: { fontSize: 8 },

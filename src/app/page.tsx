@@ -33,6 +33,7 @@ export default function Home() {
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    
   });
 
   return (
