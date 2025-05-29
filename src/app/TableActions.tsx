@@ -7,9 +7,14 @@ import autoTable from 'jspdf-autotable';
 const TableExportActions = ({ table }: { table: any; }) => {
   // Get visible columns
   const getVisibleColumns = table.getVisibleLeafColumns();
-  // Get filtered and sorted rows
-  const getFilteredAndSortedRows = table.getRowModel().rows;
 
+  // Get filtered and sorted rows
+  //* si esto esta activado, solo va tomar los datos de la pagina actual
+  // const getFilteredAndSortedRows = table.getRowModel().rows;
+
+  //! si esto esta desactivado, se toman todos los datos de la tabla, sin importar la pagina actual
+  const getFilteredAndSortedRows = table.getPrePaginationRowModel().rows;
+  
   const getDataMatrix = () => {
     const columns = getVisibleColumns;
     const rows = getFilteredAndSortedRows; // Filas ya ordenadas
