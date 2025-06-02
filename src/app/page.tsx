@@ -9,7 +9,7 @@ import {
   PaginationState,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-import { useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 import TableExportActions from './TableActions';
 import PaginationControls from './PaginationControls';
 import PaginationNumbers from './PaginationNumbers';
@@ -27,16 +27,28 @@ export default function Home() {
   const [globalFilter, setGlobalFilter] = useState('');
   const [sorting, setSorting] = useState([]);
   const [columnVisibility, setColumnVisibility] = useState({
-    name: true,
-    age: true,
-    country: true,
+    name: false,
+    age: false,
+    country: false,
   });
+
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   })
 
+  useEffect(() => {
+    const stored = localStorage.getItem('columnVisibility');
+    
+    if (stored) {
+      setColumnVisibility(JSON.parse(stored));
+    }
+  }, []);
+
+useEffect(() => {
+  localStorage.setItem('columnVisibility', JSON.stringify(columnVisibility));
+}, [columnVisibility])
 
   const data = useMemo(
     () => [
